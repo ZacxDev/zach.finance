@@ -1,0 +1,11 @@
+query getVolatility($ticker: String!, $start: Int!, $end: Int!, $interval: String!) {
+  getVolatility(ticker: $ticker, start: $start, end: $end, interval: $interval) {
+    volatilityByInterval {
+      value
+      startTimestamp
+      endTimestamp
+    }
+    standardDeviation
+  }
+}
+

@@ -1,0 +1,4 @@
+.direnv
+asset-data
+./graph/model/models_gen.go
+./graph/generated.go
