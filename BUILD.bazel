@@ -1,0 +1,7 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:exclude zach.finance
+# gazelle:go_naming_convention go_default_library
+gazelle(
+    name = "gazelle",
+)

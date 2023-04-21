@@ -22,13 +22,13 @@ pkgs.mkShell {
     };
     codema = buildGoModule rec {
       pname = "codema";
-      version = "0.5.0-rc.1";
+      version = "0.5.1";
 
       src = fetchFromGitHub {
         owner = "innovation-upstream";                                             
         repo = pname;
         rev = "v${version}";
-        sha256 = "sha256-l84uF/QMp33Cq95p+MmJZIlEyzvT5GlC8nT0t/DDX1c=";
+        sha256 = "sha256-ksao59RDmZFHRC3n1abbKY5hQpN2XW4tcPIKAoI4E4I=";
       };
 
       vendorSha256 = null;
@@ -39,11 +39,15 @@ pkgs.mkShell {
     kube3d
     tilt
     go_1_19
+    gopls
     jdk11
     gopls
     kubectl
     codema
     nodejs-18_x
+    bazel_6
+    jdk11
+    kube3d
   ];
 }
 

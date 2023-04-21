@@ -1,0 +1,50 @@
+type Asset {
+  ticker: String!
+  name: String!
+  trailingPERatio: Float!
+  pbRatio: Float!
+  roe: Float!
+  debtToEquityRatio: Float!
+  operatingMargin: Float!
+  earningsYield: Float!
+  freeCashFlowYield: Float!
+  marketCap: Float!
+  businessModelScore: QualitativeValue!
+  competitiveAdvantageScore: QualitativeValue!
+  managementQualityScore: QualitativeValue!
+  growthProspectsScore: QualitativeValue!
+  riskScore: QualitativeValue!
+  valuationScore: QualitativeValue!
+  risks: [Risk!]!
+}
+
+enum QualitativeValue {
+  POOR
+  FAIR
+  GOOD
+  HIGH
+  STRONG
+  MODERATE
+  LOW
+}
+
+type Risk {
+  parameter: RiskParameter!
+  value: Float!
+}
+
+enum RiskParameter {
+  SYSTEMIC_RISK
+  COUNTRY_RISK
+  INTEREST_RATE_RISK
+  CURRENCY_RISK
+  COMMODITY_RISK
+  POLITICAL_RISK
+  LIQUIDITY_RISK
+  VOLATILITY_RISK
+}
+
+type Query {
+  getAsset(tickers: [String!]!): [Asset!]!
+}
+

@@ -1,0 +1,8 @@
+{
+  "devCluster": "k3d-dev-cluster",
+  "k8sNamespace": "zach-finance-dev",
+  "appOrigins": [
+    "http://localhost:5173"
+  ]
+}
+

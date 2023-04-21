@@ -2,3 +2,9 @@
 asset-data
 ./graph/model/models_gen.go
 ./graph/generated.go
+bazel-bin
+bazel-out
+bazel-zach.finance
+bazel-testlogs
+tilt_config.json
+

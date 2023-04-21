@@ -1,0 +1,40 @@
+load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["server.go"],
+    importpath = "github.com/ZacxDev/zach.finance/api-gateway",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//api.zach.finance/api-gateway/graph:go_default_library",
+        "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
+        "@com_github_99designs_gqlgen//graphql/playground:go_default_library",
+        "@com_github_go_chi_chi//:go_default_library",
+        "@com_github_rs_cors//:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "api-gateway",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+go_image(
+    name = "image",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+k8s_object(
+    name = "k8s",
+    cluster = "k3d-dev-cluster",
+    kind = "deployment",
+    substitutions = {
+        "%{service}": "$(service)",
+        "%{repo_dir_absolute}": "$(pwd)",
+    },
+    template = ":deployment.yaml",
+)
