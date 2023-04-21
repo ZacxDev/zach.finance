@@ -7,7 +7,7 @@ import { onError } from '@apollo/client/link/error'
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: 'http://localhost:8089/query',
+  uri: 'http://localhost:59001/query',
 })
 
 const errorLink = onError(console.log)
