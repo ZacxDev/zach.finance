@@ -69,7 +69,7 @@ for target in service_targets:
   )
 
 exposed_services = [
-  ['api-gateway',             '001', {'web': 443}, 'localhost:59001'],
+  ['api-gateway',             '001', {'web': 443}, 'http://localhost:59001'],
 ]
 
 # port forward local services
