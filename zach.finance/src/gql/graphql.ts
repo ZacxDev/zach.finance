@@ -48,7 +48,7 @@ export enum QualitativeValue {
 export type Query = {
   __typename?: 'Query';
   getAsset: Array<Asset>;
-  getVolatility: Volatility;
+  getVolatility: Array<Volatility>;
 };
 
 
@@ -61,7 +61,7 @@ export type QueryGetVolatilityArgs = {
   end: Scalars['Int'];
   interval: Scalars['String'];
   start: Scalars['Int'];
-  ticker: Scalars['String'];
+  tickers: Array<Scalars['String']>;
 };
 
 export type Risk = {
@@ -84,6 +84,7 @@ export enum RiskParameter {
 export type Volatility = {
   __typename?: 'Volatility';
   standardDeviation: Scalars['Float'];
+  ticker: Scalars['String'];
   volatilityByInterval: Array<VolatilityForInterval>;
 };
 
@@ -95,14 +96,14 @@ export type VolatilityForInterval = {
 };
 
 export type GetVolatilityQueryVariables = Exact<{
-  ticker: Scalars['String'];
+  tickers: Array<Scalars['String']> | Scalars['String'];
   start: Scalars['Int'];
   end: Scalars['Int'];
   interval: Scalars['String'];
 }>;
 
 
-export type GetVolatilityQuery = { __typename?: 'Query', getVolatility: { __typename?: 'Volatility', standardDeviation: number, volatilityByInterval: Array<{ __typename?: 'VolatilityForInterval', value: number, startTimestamp: number, endTimestamp: number }> } };
+export type GetVolatilityQuery = { __typename?: 'Query', getVolatility: Array<{ __typename?: 'Volatility', standardDeviation: number, volatilityByInterval: Array<{ __typename?: 'VolatilityForInterval', value: number, startTimestamp: number, endTimestamp: number }> }> };
 
 
-export const GetVolatilityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getVolatility"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticker"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"start"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"end"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"interval"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getVolatility"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticker"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticker"}}},{"kind":"Argument","name":{"kind":"Name","value":"start"},"value":{"kind":"Variable","name":{"kind":"Name","value":"start"}}},{"kind":"Argument","name":{"kind":"Name","value":"end"},"value":{"kind":"Variable","name":{"kind":"Name","value":"end"}}},{"kind":"Argument","name":{"kind":"Name","value":"interval"},"value":{"kind":"Variable","name":{"kind":"Name","value":"interval"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"volatilityByInterval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"startTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"endTimestamp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"standardDeviation"}}]}}]}}]} as unknown as DocumentNode<GetVolatilityQuery, GetVolatilityQueryVariables>;
+export const GetVolatilityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getVolatility"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"start"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"end"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"interval"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getVolatility"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tickers"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}}},{"kind":"Argument","name":{"kind":"Name","value":"start"},"value":{"kind":"Variable","name":{"kind":"Name","value":"start"}}},{"kind":"Argument","name":{"kind":"Name","value":"end"},"value":{"kind":"Variable","name":{"kind":"Name","value":"end"}}},{"kind":"Argument","name":{"kind":"Name","value":"interval"},"value":{"kind":"Variable","name":{"kind":"Name","value":"interval"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"volatilityByInterval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"startTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"endTimestamp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"standardDeviation"}}]}}]}}]} as unknown as DocumentNode<GetVolatilityQuery, GetVolatilityQueryVariables>;

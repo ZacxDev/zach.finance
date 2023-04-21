@@ -38,6 +38,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	Query() QueryResolver
+	Volatility() VolatilityResolver
 	VolatilityForInterval() VolatilityForIntervalResolver
 }
 
@@ -67,7 +68,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		GetAsset      func(childComplexity int, tickers []string) int
-		GetVolatility func(childComplexity int, ticker string, start int, end int, interval string) int
+		GetVolatility func(childComplexity int, tickers []string, start int, end int, interval string) int
 	}
 
 	Risk struct {
@@ -77,6 +78,7 @@ type ComplexityRoot struct {
 
 	Volatility struct {
 		StandardDeviation    func(childComplexity int) int
+		Ticker               func(childComplexity int) int
 		VolatilityByInterval func(childComplexity int) int
 	}
 
@@ -89,7 +91,10 @@ type ComplexityRoot struct {
 
 type QueryResolver interface {
 	GetAsset(ctx context.Context, tickers []string) ([]*model.Asset, error)
-	GetVolatility(ctx context.Context, ticker string, start int, end int, interval string) (*model.Volatility, error)
+	GetVolatility(ctx context.Context, tickers []string, start int, end int, interval string) ([]*model.Volatility, error)
+}
+type VolatilityResolver interface {
+	Ticker(ctx context.Context, obj *model.Volatility) (string, error)
 }
 type VolatilityForIntervalResolver interface {
 	StartTimestamp(ctx context.Context, obj *model.VolatilityForInterval) (int, error)
@@ -252,7 +257,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetVolatility(childComplexity, args["ticker"].(string), args["start"].(int), args["end"].(int), args["interval"].(string)), true
+		return e.complexity.Query.GetVolatility(childComplexity, args["tickers"].([]string), args["start"].(int), args["end"].(int), args["interval"].(string)), true
 
 	case "Risk.parameter":
 		if e.complexity.Risk.Parameter == nil {
@@ -274,6 +279,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Volatility.StandardDeviation(childComplexity), true
+
+	case "Volatility.ticker":
+		if e.complexity.Volatility.Ticker == nil {
+			break
+		}
+
+		return e.complexity.Volatility.Ticker(childComplexity), true
 
 	case "Volatility.volatilityByInterval":
 		if e.complexity.Volatility.VolatilityByInterval == nil {
@@ -408,15 +420,15 @@ func (ec *executionContext) field_Query_getAsset_args(ctx context.Context, rawAr
 func (ec *executionContext) field_Query_getVolatility_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["ticker"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ticker"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 []string
+	if tmp, ok := rawArgs["tickers"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tickers"))
+		arg0, err = ec.unmarshalNString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["ticker"] = arg0
+	args["tickers"] = arg0
 	var arg1 int
 	if tmp, ok := rawArgs["start"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("start"))
@@ -1344,7 +1356,7 @@ func (ec *executionContext) _Query_getVolatility(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetVolatility(rctx, fc.Args["ticker"].(string), fc.Args["start"].(int), fc.Args["end"].(int), fc.Args["interval"].(string))
+		return ec.resolvers.Query().GetVolatility(rctx, fc.Args["tickers"].([]string), fc.Args["start"].(int), fc.Args["end"].(int), fc.Args["interval"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1356,9 +1368,9 @@ func (ec *executionContext) _Query_getVolatility(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Volatility)
+	res := resTmp.([]*model.Volatility)
 	fc.Result = res
-	return ec.marshalNVolatility2ᚖgithubᚗcomᚋZacxDevᚋzachᚗfinanceᚋapiᚑgatewayᚋinternalᚋmodelᚐVolatility(ctx, field.Selections, res)
+	return ec.marshalNVolatility2ᚕᚖgithubᚗcomᚋZacxDevᚋzachᚗfinanceᚋapiᚑgatewayᚋinternalᚋmodelᚐVolatilityᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getVolatility(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1369,6 +1381,8 @@ func (ec *executionContext) fieldContext_Query_getVolatility(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "ticker":
+				return ec.fieldContext_Volatility_ticker(ctx, field)
 			case "volatilityByInterval":
 				return ec.fieldContext_Volatility_volatilityByInterval(ctx, field)
 			case "standardDeviation":
@@ -1603,6 +1617,50 @@ func (ec *executionContext) fieldContext_Risk_value(ctx context.Context, field g
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Volatility_ticker(ctx context.Context, field graphql.CollectedField, obj *model.Volatility) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Volatility_ticker(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Volatility().Ticker(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Volatility_ticker(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Volatility",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3890,19 +3948,39 @@ func (ec *executionContext) _Volatility(ctx context.Context, sel ast.SelectionSe
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Volatility")
+		case "ticker":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Volatility_ticker(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "volatilityByInterval":
 
 			out.Values[i] = ec._Volatility_volatilityByInterval(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "standardDeviation":
 
 			out.Values[i] = ec._Volatility_standardDeviation(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -4527,8 +4605,48 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) marshalNVolatility2githubᚗcomᚋZacxDevᚋzachᚗfinanceᚋapiᚑgatewayᚋinternalᚋmodelᚐVolatility(ctx context.Context, sel ast.SelectionSet, v model.Volatility) graphql.Marshaler {
-	return ec._Volatility(ctx, sel, &v)
+func (ec *executionContext) marshalNVolatility2ᚕᚖgithubᚗcomᚋZacxDevᚋzachᚗfinanceᚋapiᚑgatewayᚋinternalᚋmodelᚐVolatilityᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Volatility) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNVolatility2ᚖgithubᚗcomᚋZacxDevᚋzachᚗfinanceᚋapiᚑgatewayᚋinternalᚋmodelᚐVolatility(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalNVolatility2ᚖgithubᚗcomᚋZacxDevᚋzachᚗfinanceᚋapiᚑgatewayᚋinternalᚋmodelᚐVolatility(ctx context.Context, sel ast.SelectionSet, v *model.Volatility) graphql.Marshaler {

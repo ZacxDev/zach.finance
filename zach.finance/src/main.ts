@@ -3,6 +3,7 @@ import { createApp, provide, h } from 'vue'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
 import { onError } from '@apollo/client/link/error'
+import "./tailwind.css";
 
 // HTTP connection to the API
 const httpLink = createHttpLink({

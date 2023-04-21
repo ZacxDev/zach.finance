@@ -1,5 +1,5 @@
-query getVolatility($ticker: String!, $start: Int!, $end: Int!, $interval: String!) {
-  getVolatility(ticker: $ticker, start: $start, end: $end, interval: $interval) {
+query getVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: String!) {
+  getVolatility(tickers: $tickers, start: $start, end: $end, interval: $interval) {
     volatilityByInterval {
       value
       startTimestamp

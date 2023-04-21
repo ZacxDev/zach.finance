@@ -5,11 +5,12 @@ type VolatilityForInterval {
 }
 
 type Volatility {
+  ticker: String!
   volatilityByInterval: [VolatilityForInterval!]!
   standardDeviation: Float!
 }
 
 extend type Query {
-  getVolatility(ticker: String!, start: Int!, end: Int!, interval: String!): Volatility!
+  getVolatility(tickers: [String!]!, start: Int!, end: Int!, interval: String!): [Volatility!]!
 }
 

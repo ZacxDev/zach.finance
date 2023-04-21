@@ -1,51 +1,85 @@
 <template>
   <div>
-    <form @submit.prevent="submitForm">
-      <label for="ticker">Ticker:</label>
-      <input v-model="ticker" id="ticker" type="text" required />
+    <h2>Volatility by Interface</h2>
+    <p class="m-2">
+      The % change in price for the given assets per interval, over the give
+      period.
+    </p>
+    <form @submit.prevent="submitForm" class="flex flex-col items-center">
+      <div class="flex justify-evenly w-1/2">
+        <div class="flex flex-col items-center m-2">
+          <div v-for="(_, index) in tickers" :key="index" class="mb-2">
+            <label :for="'ticker' + index">Ticker:</label>
+            <input v-model="tickers[index]" :id="'ticker' + index" type="text" required class="input input-solid" />
+          </div>
+          <button type="button" @click="addTickerInput" class="btn btn-secondary h-6 w-1/2">Add Ticker</button>
+        </div>
 
-      <label for="start">Start Date:</label>
-      <input v-model="start" id="start" type="date" required />
+        <div class="flex flex-col w-1/2">
+          <div class="flex justify-between items-center">
+            <label for="start">Start Date:</label>
+            <input v-model="start" id="start" type="date" required class="input" />
+          </div>
 
-      <label for="end">End Date:</label>
-      <input v-model="end" id="end" type="date" required />
+          <div class="flex justify-between items-center">
+            <label for="end">End Date:</label>
+            <input v-model="end" id="end" type="date" required class="input" />
+          </div>
 
-      <label for="interval">Interval:</label>
-      <select v-model="interval" id="interval" required>
-        <option value="1d">Daily</option>
-        <option value="1wk">Weekly</option>
-        <option value="1mo">Monthly</option>
-      </select>
+          <div class="flex justify-between items-center">
+            <label for="interval">Interval:</label>
+            <select v-model="interval" id="interval" required class="select">
+              <option value="1d">Daily</option>
+              <option value="1wk">Weekly</option>
+              <option value="1mo">Monthly</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-      <button type="submit">Get Volatility</button>
+      <button type="submit" class="btn btn-primary">Get Volatility</button>
     </form>
 
-    <div ref="chart"></div>
+    <div ref="chart">
+      <canvas ref="canvas"></canvas>
+    </div>
     <p v-if="error">Something went wrong...</p>
-    <p v-if="loading">Loading...</p>
   </div>
 </template>
 
-<script lang="ts">
-import { ref, watch } from "vue";
+<script lang="ts" scoped>
+import { ref } from "vue";
 import { useQuery } from "@vue/apollo-composable";
-import * as d3 from "d3";
 import { graphql } from '../gql'
-import { Numeric } from "d3";
-import { VolatilityForInterval } from "../gql/graphql";
+import { registerables } from "chart.js";
+import { Chart } from "chart.js";
+// eslint-disable-nextline
+import "chartjs-adapter-date-fns";
+import enUS from "date-fns/locale/en-US";
+import { format, subMonths } from 'date-fns'
+
+Chart.register(...registerables);
+
+const oneMonthAgo = format(subMonths(new Date, 1), 'yyyy-MM-dd')
+const today = format(new Date(), 'yyyy-MM-dd')
 
 export default {
   setup() {
-    const ticker = ref("TSLA");
-    const start = ref("2023-04-01");
-    const end = ref("2023-04-19");
+    const tickers = ref(["TSLA", "AAPL"]);
+    const start = ref(oneMonthAgo);
+    const end = ref(today);
     const interval = ref("1d");
-    const chart = ref(null);
+    const canvas = ref<null | HTMLCanvasElement>(null);
+    let chartInstance: Chart | null = null;
 
-    const { result, onError, refetch, error, loading } = useQuery(
+    const addTickerInput = () => {
+      tickers.value.push("");
+    };
+
+    const { result, onError, refetch, error } = useQuery(
       graphql(/* GraphQL */ `
-    query getVolatility($ticker: String!, $start: Int!, $end: Int!, $interval: String!) {
-      getVolatility(ticker: $ticker, start: $start, end: $end, interval: $interval) {
+    query getVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: String!) {
+      getVolatility(tickers: $tickers, start: $start, end: $end, interval: $interval) {
         volatilityByInterval {
           value
           startTimestamp
@@ -56,7 +90,7 @@ export default {
     }
   `),
       () => ({
-        ticker: ticker.value,
+        tickers: tickers.value,
         start: new Date(start.value).getTime() / 1000,
         end: new Date(end.value).getTime() / 1000,
         interval: interval.value,
@@ -72,75 +106,72 @@ export default {
     };
 
     const drawChart = () => {
-      if (!result.value) return;
+      if (!result.value || canvas.value === null) return;
 
-      const data = result.value.getVolatility.volatilityByInterval;
+      const volatilityData = result.value.getVolatility;
 
-      // Clear the chart container
-      d3.select(chart.value).html("");
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
 
-      // Set up dimensions and margins for the chart
-      const width = 900;
-      const height = 500;
-      const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+      const datasets = volatilityData.map((volatility, index) => {
+        const data = volatility.volatilityByInterval;
+        return {
+          label: `Volatility (${tickers.value[index]})`,
+          data: data.map((d) => d.value),
+          borderColor: `hsl(${(index * 360) / tickers.value.length}, 100%, 50%)`,
+          borderWidth: 1.5,
+          fill: false,
+        };
+      });
 
-      // Create the SVG container for the chart
-      const svg = d3
-        .select(chart.value)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
-      // Set up the x-scale, y-scale, and axes
-      const xScale = d3
-        .scaleTime()
-        .domain((d3.extent(data, (d) => new Date(d.startTimestamp * 1000)) as [Date, Date]))
-        .range([0, width - margin.left - margin.right]);
-
-      const yScale = d3
-        .scaleLinear()
-        .domain([0, d3.max(data, (d) => d.value) as Numeric])
-        .range([height - margin.top - margin.bottom, 0]);
-
-      const xAxis = d3.axisBottom(xScale);
-      const yAxis = d3.axisLeft(yScale);
-
-      svg
-        .append("g")
-        .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
-        .call(xAxis);
-
-      svg.append("g").call(yAxis);
-
-      // Set up the line generator
-      const line = d3
-        .line<VolatilityForInterval>()
-        .x((d) => xScale(new Date(d.startTimestamp * 1000)))
-        .y((d) => yScale(d.value));
-
-      // Bind the data to the line generator and render the chart
-      svg
-        .append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("d", line);
+      chartInstance = new Chart(canvas.value.getContext("2d") as CanvasRenderingContext2D, {
+        type: "line",
+        data: {
+          labels: volatilityData[0].volatilityByInterval.map((d) => new Date(d.startTimestamp * 1000)),
+          datasets: datasets,
+        },
+        options: {
+          scales: {
+            x: {
+              type: "time",
+              adapters: {
+                date: {
+                  locale: enUS,
+                },
+              },
+              ticks: {
+                callback: function (value) {
+                  return new Intl.DateTimeFormat("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  }).format(new Date(value));
+                },
+                maxTicksLimit: 32,
+              },
+              min: start.value,
+              max: end.value,
+            },
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
     };
 
     return {
-      ticker,
+      tickers,
+      addTickerInput,
       start,
       end,
       interval,
-      chart,
+      canvas,
       result,
       submitForm,
       drawChart,
       error,
-      loading,
     };
   },
   watch: {
@@ -153,4 +184,3 @@ export default {
   },
 };
 </script>
-

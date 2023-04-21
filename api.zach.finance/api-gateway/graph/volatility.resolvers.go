@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/ZacxDev/zach.finance/api-gateway/internal/model"
@@ -13,21 +14,29 @@ import (
 )
 
 // Volatility is the resolver for the volatility field.
-func (r *queryResolver) GetVolatility(ctx context.Context, ticker string, start int, end int, interval string) (*model.Volatility, error) {
+func (r *queryResolver) GetVolatility(ctx context.Context, tickers []string, start int, end int, interval string) ([]*model.Volatility, error) {
 	s := time.Unix(int64(start), 0)
 	e := time.Unix(int64(end), 0)
 
-	standardDeviation, volatilityByInterval, err := volatility.GetVolatility(ticker, s, e, interval)
-	if err != nil {
-		return nil, err
-	}
+	var res []*model.Volatility
+	for _, ticker := range tickers {
+		standardDeviation, volatilityByInterval, err := volatility.GetVolatility(ticker, s, e, interval)
+		if err != nil {
+			return nil, err
+		}
 
-	res := &model.Volatility{
-		VolatilityByInterval: volatilityByInterval,
-		StandardDeviation:    standardDeviation,
+		res = append(res, &model.Volatility{
+			VolatilityByInterval: volatilityByInterval,
+			StandardDeviation:    standardDeviation,
+		})
 	}
 
 	return res, nil
+}
+
+// Ticker is the resolver for the ticker field.
+func (r *volatilityResolver) Ticker(ctx context.Context, obj *model.Volatility) (string, error) {
+	panic(fmt.Errorf("not implemented: Ticker - ticker"))
 }
 
 // StartTimestamp is the resolver for the startTimestamp field.
@@ -46,9 +55,13 @@ func (r *volatilityForIntervalResolver) EndTimestamp(ctx context.Context, obj *m
 	return 0, nil
 }
 
+// Volatility returns VolatilityResolver implementation.
+func (r *Resolver) Volatility() VolatilityResolver { return &volatilityResolver{r} }
+
 // VolatilityForInterval returns VolatilityForIntervalResolver implementation.
 func (r *Resolver) VolatilityForInterval() VolatilityForIntervalResolver {
 	return &volatilityForIntervalResolver{r}
 }
 
+type volatilityResolver struct{ *Resolver }
 type volatilityForIntervalResolver struct{ *Resolver }
