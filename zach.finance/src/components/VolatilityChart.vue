@@ -62,8 +62,8 @@ import { registerables } from "chart.js";
 import { Chart } from "chart.js";
 // eslint-disable-nextline
 import "chartjs-adapter-date-fns";
-import enUS from "date-fns/locale/en-US";
 import { format, subMonths } from 'date-fns'
+import { getVolatilityChart } from "@functions/chart";
 
 Chart.register(...registerables);
 
@@ -121,57 +121,9 @@ export default {
         chartInstance.destroy();
       }
 
-      const datasets = volatilityData.map((volatility, index) => {
-        const data = volatility.volatilityByInterval;
-        return {
-          label: `Volatility (${tickers.value[index]})`,
-          data: data.map((d) => d.value),
-          borderColor: `hsl(${(index * 360) / tickers.value.length}, 100%, 50%)`,
-          borderWidth: 1.5,
-          fill: false,
-        };
-      });
+      const chartData = getVolatilityChart(volatilityData, tickers.value, start.value, end.value);
 
-      chartInstance = new Chart(canvas.value.getContext("2d") as CanvasRenderingContext2D, {
-        type: "line",
-        data: {
-          labels: volatilityData[0].volatilityByInterval.map((d) => new Date(d.startTimestamp * 1000)),
-          datasets: datasets,
-        },
-        options: {
-          scales: {
-            x: {
-              type: "time",
-              grid: {
-                color: 'rgb(153 153 153 / 40%)',
-              },
-              adapters: {
-                date: {
-                  locale: enUS,
-                },
-              },
-              ticks: {
-                callback: function (value) {
-                  return new Intl.DateTimeFormat("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  }).format(new Date(value));
-                },
-                maxTicksLimit: 32,
-              },
-              min: start.value,
-              max: end.value,
-            },
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgb(153 153 153 / 40%)',
-              },
-            },
-          },
-        },
-      });
+      chartInstance = new Chart(canvas.value.getContext("2d") as CanvasRenderingContext2D, chartData)
     };
 
     return {
