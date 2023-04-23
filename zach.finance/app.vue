@@ -1,5 +1,5 @@
 <template>
   <div>
-    <VolatilityChart />
+    <NuxtPage />
   </div>
 </template>
