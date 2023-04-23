@@ -77,7 +77,7 @@ import { registerables, Chart } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 import { format, subMonths } from 'date-fns'
 import { graphql } from '../gql'
-import { getVolatilityChart } from '@/functions/chart'
+import { getVolatilityChart } from '@/fn/chart'
 
 Chart.register(...registerables)
 
