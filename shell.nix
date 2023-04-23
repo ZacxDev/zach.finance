@@ -30,6 +30,7 @@ pkgs.mkShell {
     jdk11
     kubectl
     nodejs-18_x
+    act
   ];
 }
 

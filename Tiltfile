@@ -85,9 +85,9 @@ local_resource(
   ],
   readiness_probe=probe(
     period_secs=15,
-    http_get=http_get_action(port=5173, path="/")
+    http_get=http_get_action(port=3000, path="/")
   ),
-  links=['http://localhost:5173'],
+  links=['http://localhost:3000'],
   labels=['frontend'],
 )
 
