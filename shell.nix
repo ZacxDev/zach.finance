@@ -25,7 +25,7 @@ pkgs.mkShell {
     bazel_6
     kube3d
     tilt
-    go_1_19
+    go_1_20
     gopls
     jdk11
     kubectl
