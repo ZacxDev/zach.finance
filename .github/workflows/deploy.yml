@@ -23,7 +23,10 @@ jobs:
       - name: Build and push container image
         env:
           SCRIPT: |
+            echo hi
             doctl auth init --access-token ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+            doctl registry get
+            echo hi2
             bazel run //api.zach.finance/api-gateway:push_image
         run: |
           nix-channel --update
