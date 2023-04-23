@@ -11,18 +11,18 @@
             period.
           </p>
           <form class="flex flex-col items-center" @submit.prevent="submitForm">
-            <div class="flex justify-evenly w-full mb-4">
-              <div class="flex flex-col items-center m-2">
+            <div class="flex flex-wrap justify-between mb-4 xl:w-2/6 w-full">
+              <div class="flex flex-col items-center mb-4 lg:mb-2 w-full md:w-5/12">
                 <label>Tickers</label>
                 <div v-for="(_, index) in tickers" :key="index" class="mb-2">
                   <input :id="'ticker' + index" v-model="tickers[index]" type="text" required class="input">
                 </div>
-                <button type="button" class="btn btn-secondary h-6 w-1/2" @click="addTickerInput">
+                <button type="button" class="btn btn-secondary h-6 w-full lg:w-1/2" @click="addTickerInput">
                   Add Ticker
                 </button>
               </div>
 
-              <div class="flex flex-col w-1/2">
+              <div class="flex flex-col w-full md:w-5/12">
                 <div class="flex flex-col justify-between items-center mb-2">
                   <label for="start">Start Date:</label>
                   <input id="start" v-model="start" type="date" required class="input">
