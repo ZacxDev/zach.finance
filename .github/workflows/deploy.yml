@@ -23,6 +23,7 @@ jobs:
       - name: Build and push container image
         env:
           SCRIPT: |
+            echo ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN } | base64
             doctl auth init --access-token ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
             bazel run //api.zach.finance/api-gateway:push_image
         run: |
