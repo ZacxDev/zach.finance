@@ -20,6 +20,10 @@ func (r *queryResolver) GetVolatility(ctx context.Context, tickers []string, sta
 
 	var res []*model.Volatility
 	for _, ticker := range tickers {
+		if ticker == "" {
+			continue
+		}
+
 		standardDeviation, volatilityByInterval, err := volatility.GetVolatility(ticker, s, e, interval)
 		if err != nil {
 			return nil, err

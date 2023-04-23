@@ -97,7 +97,7 @@ export default {
       tickers.value.push('')
     }
 
-    const { result, onError, refetch, error, onResult } = useQuery(
+    const { result, onError, refetch, error } = useQuery(
       graphql(/* GraphQL */ `
     query getVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: String!) {
       getVolatility(tickers: $tickers, start: $start, end: $end, interval: $interval) {
@@ -111,7 +111,7 @@ export default {
     }
   `),
       () => ({
-        tickers: tickers.value,
+        tickers: tickers.value.filter(t => t !== ''),
         start: new Date(start.value).getTime() / 1000,
         end: new Date(end.value).getTime() / 1000,
         interval: interval.value
