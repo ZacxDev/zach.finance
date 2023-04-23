@@ -1,4 +1,3 @@
-import enUS from 'date-fns/locale/en-US'
 import { ChartConfiguration } from 'chart.js'
 import { Volatility } from '@/gql/graphql'
 
@@ -38,11 +37,6 @@ export const getVolatilityChart = (
           type: 'time',
           grid: {
             color: gridColor
-          },
-          adapters: {
-            date: {
-              locale: enUS
-            }
           },
           ticks: {
             callback: function (value) {
