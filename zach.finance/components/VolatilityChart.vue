@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <div class="flex justify-center mb-4">
-      <div class="card w-4/6 max-w-none">
+  <div class="mb-4">
+    <div class="flex justify-center my-4">
+      <div class="card w-11/12 max-w-none">
         <div class="card-body">
-          <h2 class="text-4xl">
+          <h2 class="text-4xl text-center">
             Volatility by Interval
           </h2>
-          <p class="m-2">
+          <p class="m-2 text-center">
             The % change in price for the given assets per interval, over the give
             period.
           </p>
@@ -58,15 +58,22 @@
       </div>
     </div>
 
-    <div ref="chart">
-      <h3 class="text-4xl">
-        Volatility
-      </h3>
-      <canvas ref="canvas" />
+    <div class="flex justify-center">
+      <div class="card w-11/12 max-w-none">
+        <div class="card-body">
+          <div ref="chart">
+            <h3 class="text-4xl text-center">
+              Volatility
+            </h3>
+            <canvas ref="canvas" />
+          </div>
+          <p v-if="error">
+            Something went wrong...
+          </p>
+        </div>
+      </div>
     </div>
-    <p v-if="error">
-      Something went wrong...
-    </p>
+
   </div>
 </template>
 
