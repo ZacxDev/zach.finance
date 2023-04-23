@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ZacxDev/zach.finance/api-gateway/internal/model"
+	"github.com/pkg/errors"
 )
 
 type YahooResponse struct {
@@ -31,19 +32,19 @@ func getHistoricalData(ticker string, startDate time.Time, endDate time.Time, in
 	url := fmt.Sprintf("https://query1.finance.yahoo.com/v8/finance/chart/%s?period1=%d&period2=%d&interval=%s", ticker, start, end, interval)
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var data YahooResponse
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	return &data, nil
@@ -83,7 +84,7 @@ func calculateStandardDeviation(values []float64) float64 {
 func GetVolatility(ticker string, startDate time.Time, endDate time.Time, interval string) (float64, []model.VolatilityForInterval, error) {
 	data, err := getHistoricalData(ticker, startDate, endDate, interval)
 	if err != nil {
-		return 0, nil, err
+		return 0, nil, errors.WithStack(err)
 	}
 
 	prices := data.Chart.Result[0].Indicators.Quote[0].Close
@@ -93,25 +94,8 @@ func GetVolatility(ticker string, startDate time.Time, endDate time.Time, interv
 	for _, v := range volatilityData {
 		volatilityValues = append(volatilityValues, v.Value)
 	}
+
 	standardDeviation := calculateStandardDeviation(volatilityValues)
 
 	return standardDeviation, volatilityData, nil
 }
-
-/*
-func main() {
-	startDate := time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)
-	endDate := time.Date(2021, time.December, 31, 0, 0, 0, 0, time.UTC)
-	ticker := "AAPL"
-	interval := "1d" // Change this to "1wk" for weekly volatility or "1mo" for monthly volatility
-
-	sd, volatility, err := GetVolatility(ticker, startDate, endDate, interval)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	fmt.Printf("The standard deviation for %s between %v and %v with interval %s is: %.4f\n", ticker, startDate, endDate, interval, sd)
-	fmt.Printf("The volatility for %s between %v and %v with interval %s is: %+v\n", ticker, startDate, endDate, interval, volatility)
-}
-*/

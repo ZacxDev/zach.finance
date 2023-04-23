@@ -5,5 +5,8 @@ go_library(
     srcs = ["volatility.go"],
     importpath = "github.com/ZacxDev/zach.finance/api-gateway/internal/volatility",
     visibility = ["//api.zach.finance:__subpackages__"],
-    deps = ["//api.zach.finance/api-gateway/internal/model:go_default_library"],
+    deps = [
+        "//api.zach.finance/api-gateway/internal/model:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
+    ],
 )

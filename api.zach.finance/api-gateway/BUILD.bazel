@@ -47,4 +47,3 @@ container_push(
     registry = "registry.digitalocean.com",
     repository = "hedgepie/api-gateway",
 )
-
