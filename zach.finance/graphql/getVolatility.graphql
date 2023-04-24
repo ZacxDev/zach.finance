@@ -6,6 +6,7 @@ query getVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: S
       endTimestamp
     }
     standardDeviation
+    ticker
   }
 }
 

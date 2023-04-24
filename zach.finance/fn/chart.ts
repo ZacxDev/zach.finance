@@ -1,11 +1,10 @@
 import { ChartConfiguration } from 'chart.js'
 import { Volatility } from '@/gql/graphql'
 
-const gridColor = 'rgb(153 153 153 / 40%)'
+export const ChartGridColor = 'rgb(153 153 153 / 40%)'
 
 export const getVolatilityChart = (
-  volatilityData: Omit<Volatility, 'ticker'>[],
-  tickers: string[],
+  volatilityData: Volatility[],
   start: string,
   end: string
 ): ChartConfiguration<'line', number[], Date> => {
@@ -13,9 +12,9 @@ export const getVolatilityChart = (
     const data = volatility.volatilityByInterval
 
     return {
-      label: `Volatility (${tickers[index]})`,
+      label: `Volatility (${volatility.ticker})`,
       data: data.map(d => d.value),
-      borderColor: `hsl(${(index * 360) / tickers.length}, 100%, 50%)`,
+      borderColor: `hsl(${(index * 360) / volatilityData.length}, 100%, 50%)`,
       borderWidth: 1.5,
       fill: false
     }
@@ -36,7 +35,7 @@ export const getVolatilityChart = (
         x: {
           type: 'time',
           grid: {
-            color: gridColor
+            color: ChartGridColor
           },
           ticks: {
             callback: function (value) {
@@ -54,7 +53,7 @@ export const getVolatilityChart = (
         y: {
           beginAtZero: true,
           grid: {
-            color: gridColor
+            color: ChartGridColor
           }
         }
       }
