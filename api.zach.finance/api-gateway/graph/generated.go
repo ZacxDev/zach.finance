@@ -38,7 +38,6 @@ type Config struct {
 
 type ResolverRoot interface {
 	Query() QueryResolver
-	Volatility() VolatilityResolver
 	VolatilityForInterval() VolatilityForIntervalResolver
 }
 
@@ -92,9 +91,6 @@ type ComplexityRoot struct {
 type QueryResolver interface {
 	GetAsset(ctx context.Context, tickers []string) ([]*model.Asset, error)
 	GetVolatility(ctx context.Context, tickers []string, start int, end int, interval string) ([]*model.Volatility, error)
-}
-type VolatilityResolver interface {
-	Ticker(ctx context.Context, obj *model.Volatility) (string, error)
 }
 type VolatilityForIntervalResolver interface {
 	StartTimestamp(ctx context.Context, obj *model.VolatilityForInterval) (int, error)
@@ -1636,7 +1632,7 @@ func (ec *executionContext) _Volatility_ticker(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Volatility().Ticker(rctx, obj)
+		return obj.Ticker, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1657,8 +1653,8 @@ func (ec *executionContext) fieldContext_Volatility_ticker(ctx context.Context, 
 	fc = &graphql.FieldContext{
 		Object:     "Volatility",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -3949,38 +3945,25 @@ func (ec *executionContext) _Volatility(ctx context.Context, sel ast.SelectionSe
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Volatility")
 		case "ticker":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Volatility_ticker(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._Volatility_ticker(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "volatilityByInterval":
 
 			out.Values[i] = ec._Volatility_volatilityByInterval(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "standardDeviation":
 
 			out.Values[i] = ec._Volatility_standardDeviation(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))

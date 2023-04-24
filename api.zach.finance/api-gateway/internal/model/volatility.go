@@ -11,4 +11,5 @@ type VolatilityForInterval struct {
 type Volatility struct {
 	VolatilityByInterval []VolatilityForInterval
 	StandardDeviation    float64
+	Ticker               string
 }
