@@ -5,7 +5,12 @@ export default defineNuxtConfig({
     strict: true
   },
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/apollo'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/apollo',
+    '@nuxtjs/i18n',
+    'nuxt-gtag'
+  ],
 
   app: {
     head: {
@@ -40,5 +45,9 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+
+  gtag: {
+    id: 'G-P5PW05HWYM'
   }
 })
