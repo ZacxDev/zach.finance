@@ -56,6 +56,17 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
       alwaysRedirect: true
+    },
+    customRoutes: 'config',
+    pages: {
+      volatility: {
+        en: '/volatility',
+        es: '/volatilidad'
+      },
+      dividend: {
+        en: '/dividend',
+        es: '/dividendo'
+      }
     }
   }
 

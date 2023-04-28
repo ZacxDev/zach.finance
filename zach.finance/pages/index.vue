@@ -7,7 +7,9 @@
         </h1>
       </header>
       <div class="flex flex-wrap justify-center gap-4">
-        <nuxt-link to="/volatility" class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md">
+        <nuxt-link
+          :to="localePath({ name: 'volatility' })"
+          class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md">
           <div class="card-body">
             <div class="flex flex-col items-center gap-2">
               <ScaleIcon />
@@ -17,7 +19,9 @@
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link to="/dividend" class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md">
+        <nuxt-link
+          :to="localePath({ name: 'dividend' })"
+          class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md">
           <div class="card-body">
             <div class="flex flex-col items-center gap-2">
               <DollarIcon />
@@ -36,9 +40,11 @@
 export default {
   setup() {
     const { t } = useI18n()
+    const localePath = useLocalePath()
 
     return {
-      title: t('indexWelcome')
+      title: t('indexWelcome'),
+      localePath
     }
   }
 }
