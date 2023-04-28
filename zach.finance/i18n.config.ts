@@ -21,7 +21,11 @@ export default defineI18nConfig(() => ({
       somethingWentWrong: 'Something went wrong...',
 
       volatility: 'Volatility',
-      volatilitySummary: 'Volatility Summary'
+      volatilitySummary: 'Volatility Summary',
+
+      indexWelcome: 'Welcome to zach.finance',
+      indexVolatilityTools: 'Volatility Tools',
+      indexDividendTools: 'Dividend Tools'
     },
     es: {
       siteTitle: 'zach.finance - las mejores herramientas financieras gratuitas del universo',
@@ -42,7 +46,11 @@ export default defineI18nConfig(() => ({
       somethingWentWrong: 'Algo Salió Mal...',
 
       volatility: 'Volatilidad',
-      volatilitySummary: 'Resumen De Volatilidad'
+      volatilitySummary: 'Resumen De Volatilidad',
+
+      indexWelcome: 'Bienvenido a zach.finance',
+      indexVolatilityTools: 'Herramientas de Volatilidad',
+      indexDividendTools: 'Herramientas de Dividendos'
     }
   }
 }))
