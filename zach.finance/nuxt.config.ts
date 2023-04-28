@@ -12,28 +12,6 @@ export default defineNuxtConfig({
     'nuxt-gtag'
   ],
 
-  app: {
-    head: {
-      charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1',
-      title: 'zach.finance - the best free financial tools in the universe',
-      meta: [
-        {
-          name: 'og:title',
-          content: 'zach.finance'
-        },
-        {
-          name: 'og:description',
-          content: 'A collection of free and amazing financial analysis tools.'
-        },
-        {
-          name: 'og:image',
-          content: '/apple-touch-icon.png'
-        }
-      ]
-    }
-  },
-
   apollo: {
     clients: {
       default: {
@@ -49,5 +27,30 @@ export default defineNuxtConfig({
 
   gtag: {
     id: 'G-P5PW05HWYM'
+  },
+
+  i18n: {
+    baseUrl: 'https://zach.finance',
+    locales: [
+      {
+        code: 'en',
+        iso: 'en-US'
+      },
+      {
+        code: 'es',
+        iso: 'es-AR'
+      },
+      {
+        code: 'es',
+        iso: 'es-CO'
+      },
+      {
+        code: 'es',
+        iso: 'es-LA'
+      }
+    ],
+    defaultLocale: 'en',
+    vueI18n: './i18n.config.ts'
   }
+
 })

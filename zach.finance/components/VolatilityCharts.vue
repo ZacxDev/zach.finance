@@ -4,46 +4,45 @@
       <div class="card w-11/12 max-w-none">
         <div class="card-body">
           <h2 class="text-4xl text-center">
-            Volatility by Interval
+            {{ $t('volatilityByInterval') }}
           </h2>
           <p class="m-2 text-center">
-            The % change in price for the given assets per interval, over the give
-            period.
+            {{ $t('volatilityDescription') }}
           </p>
           <form class="flex flex-col items-center" @submit.prevent="submitForm">
             <div class="flex flex-wrap justify-between mb-4 xl:w-2/6 w-full">
               <div class="flex flex-col items-center mb-4 lg:mb-2 w-full md:w-5/12">
-                <label>Tickers</label>
+                <label>{{ $t('tickers') }}</label>
                 <div v-for="(_, index) in tickers" :key="index" class="mb-2">
                   <input :id="'ticker' + index" v-model="tickers[index]" type="text" required class="input">
                 </div>
                 <button type="button" class="btn btn-secondary h-6 w-full lg:w-1/2" @click="addTickerInput">
-                  Add Ticker
+                  {{ $t('addTicker') }}
                 </button>
               </div>
 
               <div class="flex flex-col w-full md:w-5/12">
                 <div class="flex flex-col justify-between items-center mb-2">
-                  <label for="start">Start Date:</label>
+                  <label for="start">{{ $t('startDate') }}:</label>
                   <input id="start" v-model="start" type="date" required class="input">
                 </div>
 
                 <div class="flex flex-col justify-between items-center mb-2">
-                  <label for="end">End Date:</label>
+                  <label for="end">{{ $t('endDate') }}:</label>
                   <input id="end" v-model="end" type="date" required class="input">
                 </div>
 
                 <div class="flex flex-col justify-between items-center mb-2">
-                  <label for="interval">Interval:</label>
+                  <label for="interval">{{ $t('interval') }}:</label>
                   <select id="interval" v-model="interval" required class="select">
                     <option value="1d">
-                      Daily
+                      {{ $t('daily') }}
                     </option>
                     <option value="1wk">
-                      Weekly
+                      {{ $t('weekly') }}
                     </option>
                     <option value="1mo">
-                      Monthly
+                      {{ $t('monthly') }}
                     </option>
                   </select>
                 </div>
@@ -51,7 +50,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">
-              Get Volatility
+              {{ $t('getVolatility') }}
             </button>
           </form>
         </div>
@@ -60,7 +59,7 @@
 
     <VolatilityLines :data="result?.getVolatility" :start="start" :end="end" />
     <p v-if="error">
-      Something went wrong...
+      {{ $t('somethingWentWrong') }}
     </p>
 
     <div v-if="result?.getVolatility">

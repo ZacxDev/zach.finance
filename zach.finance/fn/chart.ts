@@ -4,6 +4,7 @@ import { Volatility } from '@/gql/graphql'
 export const ChartGridColor = 'rgb(153 153 153 / 40%)'
 
 export const getVolatilityChart = (
+  volatilityLabel: string,
   volatilityData: Volatility[],
   start: string,
   end: string
@@ -12,7 +13,7 @@ export const getVolatilityChart = (
     const data = volatility.volatilityByInterval
 
     return {
-      label: `Volatility (${volatility.ticker})`,
+      label: `${volatilityLabel} (${volatility.ticker})`,
       data: data.map(d => d.value),
       borderColor: `hsl(${(index * 360) / volatilityData.length}, 100%, 50%)`,
       borderWidth: 1.5,

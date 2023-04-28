@@ -4,7 +4,7 @@
       <div class="card-body">
         <div>
           <h3 class="text-4xl text-center">
-            Volatility
+            {{ $t('volatility') }}
           </h3>
           <canvas ref="canvas" />
         </div>
@@ -44,6 +44,7 @@ export default {
   setup(props) {
     const canvas = ref<null | HTMLCanvasElement>(null)
     let chartInstance: Chart | null = null
+    const { t } = useI18n()
 
     const drawChart = () => {
       if (canvas.value === null || props.data.length === 0) { return }
@@ -52,7 +53,7 @@ export default {
         chartInstance.destroy()
       }
 
-      const chartData = getVolatilityChart(props.data, props.start, props.end)
+      const chartData = getVolatilityChart(t('volatility'), props.data, props.start, props.end)
 
       chartInstance = new Chart(canvas.value.getContext('2d') as CanvasRenderingContext2D, chartData)
     }

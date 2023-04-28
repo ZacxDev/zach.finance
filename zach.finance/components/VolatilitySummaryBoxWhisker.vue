@@ -5,7 +5,7 @@
         <div class="card-body">
           <div>
             <h3 class="text-4xl text-center">
-              Volatility Summary
+              {{ $t('volatilitySummary') }}
             </h3>
             <canvas ref="canvas" style="max-height: 1080px; min-height: 995px;" />
           </div>
@@ -32,6 +32,7 @@ export default {
   setup(props) {
     const canvas = ref<null | HTMLCanvasElement>(null)
     let chart: Chart | null = null
+    const { t } = useI18n()
 
     const loadChart = () => {
       if (canvas.value == null) {
@@ -56,7 +57,7 @@ export default {
         labels,
         datasets: [
           {
-            label: 'Volatility Summary',
+            label: t('volatilitySummary'),
             data: fiveSummaryStatistics,
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
