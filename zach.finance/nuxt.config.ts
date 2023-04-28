@@ -31,6 +31,7 @@ export default defineNuxtConfig({
 
   i18n: {
     baseUrl: 'https://zach.finance',
+    vueI18n: './i18n.config.ts',
     locales: [
       {
         code: 'en',
@@ -50,7 +51,11 @@ export default defineNuxtConfig({
       }
     ],
     defaultLocale: 'en',
-    vueI18n: './i18n.config.ts'
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root'
+    }
   }
 
 })
