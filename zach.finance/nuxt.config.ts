@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   apollo: {
     clients: {
       default: {
-        httpEndpoint: isProd ? 'https://api.zach.finance/query' : 'http://localhost:59001/query',
+        httpEndpoint: isProd ? 'https://api.finsune.com/query' : 'http://localhost:59001/query',
         httpLinkOptions: {
           headers: {
             origin: 'http://localhost:3000'
