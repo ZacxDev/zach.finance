@@ -63,9 +63,9 @@ export default defineNuxtConfig({
         en: '/volatility',
         es: '/volatilidad'
       },
-      dividend: {
-        en: '/dividend',
-        es: '/dividendo'
+      financials: {
+        en: '/financials',
+        es: '/financieros'
       }
     }
   }

@@ -1,0 +1,25 @@
+query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {
+  getAsset(tickers: $tickers) {
+    ticker
+    name
+    trailingPERatio
+    pbRatio
+    roe
+    debtToEquityRatio
+    operatingMargin
+    earningsYield
+    freeCashFlowYield
+    marketCap
+    currentPrice
+    dividendYield
+    lastDividendDate
+    historicalPrices(from: $fromDate, to: $toDate) {
+      date
+      close
+    }
+    historicalEarnings {
+      epsActual
+      quarter
+    }
+  }
+}

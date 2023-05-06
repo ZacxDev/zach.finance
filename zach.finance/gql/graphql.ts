@@ -18,10 +18,15 @@ export type Asset = {
   __typename?: 'Asset';
   businessModelScore: QualitativeValue;
   competitiveAdvantageScore: QualitativeValue;
+  currentPrice: Scalars['Float'];
   debtToEquityRatio: Scalars['Float'];
+  dividendYield: Scalars['Float'];
   earningsYield: Scalars['Float'];
   freeCashFlowYield: Scalars['Float'];
   growthProspectsScore: QualitativeValue;
+  historicalEarnings: Array<Earnings>;
+  historicalPrices: Array<HistoricalPrice>;
+  lastDividendDate: Scalars['Int'];
   managementQualityScore: QualitativeValue;
   marketCap: Scalars['Float'];
   name: Scalars['String'];
@@ -33,6 +38,29 @@ export type Asset = {
   ticker: Scalars['String'];
   trailingPERatio: Scalars['Float'];
   valuationScore: QualitativeValue;
+};
+
+
+export type AssetHistoricalPricesArgs = {
+  from: Scalars['Int'];
+  to: Scalars['Int'];
+};
+
+export type Earnings = {
+  __typename?: 'Earnings';
+  epsActual: Scalars['Float'];
+  epsEstimate: Scalars['Float'];
+  quarter: Scalars['Int'];
+};
+
+export type HistoricalPrice = {
+  __typename?: 'HistoricalPrice';
+  close: Scalars['Float'];
+  date: Scalars['String'];
+  high?: Maybe<Scalars['Float']>;
+  low?: Maybe<Scalars['Float']>;
+  open?: Maybe<Scalars['Float']>;
+  volume?: Maybe<Scalars['Int']>;
 };
 
 export enum QualitativeValue {
@@ -95,15 +123,14 @@ export type VolatilityForInterval = {
   value: Scalars['Float'];
 };
 
-export type SgetVolatilityQueryVariables = Exact<{
+export type GetAssetsQueryVariables = Exact<{
   tickers: Array<Scalars['String']> | Scalars['String'];
-  start: Scalars['Int'];
-  end: Scalars['Int'];
-  interval: Scalars['String'];
+  fromDate: Scalars['Int'];
+  toDate: Scalars['Int'];
 }>;
 
 
-export type SgetVolatilityQuery = { __typename?: 'Query', getVolatility: Array<{ __typename?: 'Volatility', standardDeviation: number, volatilityByInterval: Array<{ __typename?: 'VolatilityForInterval', value: number, startTimestamp: number, endTimestamp: number }> }> };
+export type GetAssetsQuery = { __typename?: 'Query', getAsset: Array<{ __typename?: 'Asset', ticker: string, name: string, trailingPERatio: number, pbRatio: number, roe: number, debtToEquityRatio: number, operatingMargin: number, earningsYield: number, freeCashFlowYield: number, marketCap: number, currentPrice: number, dividendYield: number, lastDividendDate: number, historicalPrices: Array<{ __typename?: 'HistoricalPrice', date: string, close: number }>, historicalEarnings: Array<{ __typename?: 'Earnings', epsActual: number, quarter: number }> }> };
 
 export type GetVolatilityQueryVariables = Exact<{
   tickers: Array<Scalars['String']> | Scalars['String'];
@@ -116,5 +143,5 @@ export type GetVolatilityQueryVariables = Exact<{
 export type GetVolatilityQuery = { __typename?: 'Query', getVolatility: Array<{ __typename?: 'Volatility', standardDeviation: number, ticker: string, volatilityByInterval: Array<{ __typename?: 'VolatilityForInterval', value: number, startTimestamp: number, endTimestamp: number }> }> };
 
 
-export const SgetVolatilityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"sgetVolatility"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"start"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"end"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"interval"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getVolatility"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tickers"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}}},{"kind":"Argument","name":{"kind":"Name","value":"start"},"value":{"kind":"Variable","name":{"kind":"Name","value":"start"}}},{"kind":"Argument","name":{"kind":"Name","value":"end"},"value":{"kind":"Variable","name":{"kind":"Name","value":"end"}}},{"kind":"Argument","name":{"kind":"Name","value":"interval"},"value":{"kind":"Variable","name":{"kind":"Name","value":"interval"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"volatilityByInterval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"startTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"endTimestamp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"standardDeviation"}}]}}]}}]} as unknown as DocumentNode<SgetVolatilityQuery, SgetVolatilityQueryVariables>;
+export const GetAssetsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAssets"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fromDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"toDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAsset"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tickers"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ticker"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"trailingPERatio"}},{"kind":"Field","name":{"kind":"Name","value":"pbRatio"}},{"kind":"Field","name":{"kind":"Name","value":"roe"}},{"kind":"Field","name":{"kind":"Name","value":"debtToEquityRatio"}},{"kind":"Field","name":{"kind":"Name","value":"operatingMargin"}},{"kind":"Field","name":{"kind":"Name","value":"earningsYield"}},{"kind":"Field","name":{"kind":"Name","value":"freeCashFlowYield"}},{"kind":"Field","name":{"kind":"Name","value":"marketCap"}},{"kind":"Field","name":{"kind":"Name","value":"currentPrice"}},{"kind":"Field","name":{"kind":"Name","value":"dividendYield"}},{"kind":"Field","name":{"kind":"Name","value":"lastDividendDate"}},{"kind":"Field","name":{"kind":"Name","value":"historicalPrices"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"from"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fromDate"}}},{"kind":"Argument","name":{"kind":"Name","value":"to"},"value":{"kind":"Variable","name":{"kind":"Name","value":"toDate"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"close"}}]}},{"kind":"Field","name":{"kind":"Name","value":"historicalEarnings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"epsActual"}},{"kind":"Field","name":{"kind":"Name","value":"quarter"}}]}}]}}]}}]} as unknown as DocumentNode<GetAssetsQuery, GetAssetsQueryVariables>;
 export const GetVolatilityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getVolatility"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"start"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"end"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"interval"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getVolatility"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tickers"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tickers"}}},{"kind":"Argument","name":{"kind":"Name","value":"start"},"value":{"kind":"Variable","name":{"kind":"Name","value":"start"}}},{"kind":"Argument","name":{"kind":"Name","value":"end"},"value":{"kind":"Variable","name":{"kind":"Name","value":"end"}}},{"kind":"Argument","name":{"kind":"Name","value":"interval"},"value":{"kind":"Variable","name":{"kind":"Name","value":"interval"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"volatilityByInterval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"startTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"endTimestamp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"standardDeviation"}},{"kind":"Field","name":{"kind":"Name","value":"ticker"}}]}}]}}]} as unknown as DocumentNode<GetVolatilityQuery, GetVolatilityQueryVariables>;

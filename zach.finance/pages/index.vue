@@ -9,7 +9,8 @@
       <div class="flex flex-wrap justify-center gap-4">
         <nuxt-link
           :to="localePath({ name: 'volatility' })"
-          class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md">
+          class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md"
+        >
           <div class="card-body">
             <div class="flex flex-col items-center gap-2">
               <ScaleIcon />
@@ -20,13 +21,14 @@
           </div>
         </nuxt-link>
         <nuxt-link
-          :to="localePath({ name: 'dividend' })"
-          class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md">
+          to="/assets/AAPL,TSLA,SCHD"
+          class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md"
+        >
           <div class="card-body">
             <div class="flex flex-col items-center gap-2">
               <DollarIcon />
               <h3 class="text-xl text-center">
-                {{ $t('indexDividendTools') }}
+                {{ $t('indexFinancials') }}
               </h3>
             </div>
           </div>

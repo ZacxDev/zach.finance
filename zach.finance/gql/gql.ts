@@ -13,7 +13,7 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n    query sgetVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: String!) {\n      getVolatility(tickers: $tickers, start: $start, end: $end, interval: $interval) {\n        volatilityByInterval {\n          value\n          startTimestamp\n          endTimestamp\n        }\n        standardDeviation\n      }\n    }\n  ": types.SgetVolatilityDocument,
+    "query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {\n  getAsset(tickers: $tickers) {\n    ticker\n    name\n    trailingPERatio\n    pbRatio\n    roe\n    debtToEquityRatio\n    operatingMargin\n    earningsYield\n    freeCashFlowYield\n    marketCap\n    currentPrice\n    dividendYield\n    lastDividendDate\n    historicalPrices(from: $fromDate, to: $toDate) {\n      date\n      close\n    }\n    historicalEarnings {\n      epsActual\n      quarter\n    }\n  }\n}": types.GetAssetsDocument,
     "query getVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: String!) {\n  getVolatility(tickers: $tickers, start: $start, end: $end, interval: $interval) {\n    volatilityByInterval {\n      value\n      startTimestamp\n      endTimestamp\n    }\n    standardDeviation\n    ticker\n  }\n}": types.GetVolatilityDocument,
 };
 
@@ -34,7 +34,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query sgetVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: String!) {\n      getVolatility(tickers: $tickers, start: $start, end: $end, interval: $interval) {\n        volatilityByInterval {\n          value\n          startTimestamp\n          endTimestamp\n        }\n        standardDeviation\n      }\n    }\n  "): (typeof documents)["\n    query sgetVolatility($tickers: [String!]!, $start: Int!, $end: Int!, $interval: String!) {\n      getVolatility(tickers: $tickers, start: $start, end: $end, interval: $interval) {\n        volatilityByInterval {\n          value\n          startTimestamp\n          endTimestamp\n        }\n        standardDeviation\n      }\n    }\n  "];
+export function graphql(source: "query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {\n  getAsset(tickers: $tickers) {\n    ticker\n    name\n    trailingPERatio\n    pbRatio\n    roe\n    debtToEquityRatio\n    operatingMargin\n    earningsYield\n    freeCashFlowYield\n    marketCap\n    currentPrice\n    dividendYield\n    lastDividendDate\n    historicalPrices(from: $fromDate, to: $toDate) {\n      date\n      close\n    }\n    historicalEarnings {\n      epsActual\n      quarter\n    }\n  }\n}"): (typeof documents)["query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {\n  getAsset(tickers: $tickers) {\n    ticker\n    name\n    trailingPERatio\n    pbRatio\n    roe\n    debtToEquityRatio\n    operatingMargin\n    earningsYield\n    freeCashFlowYield\n    marketCap\n    currentPrice\n    dividendYield\n    lastDividendDate\n    historicalPrices(from: $fromDate, to: $toDate) {\n      date\n      close\n    }\n    historicalEarnings {\n      epsActual\n      quarter\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

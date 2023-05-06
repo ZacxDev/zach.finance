@@ -1,3 +1,0 @@
-<template>
-  dividend stuff
-</template>

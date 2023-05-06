@@ -25,7 +25,7 @@ export default defineI18nConfig(() => ({
 
       indexWelcome: 'Welcome to zach.finance',
       indexVolatilityTools: 'Volatility Tools',
-      indexDividendTools: 'Dividend Tools'
+      indexFinancials: 'Financial Data'
     },
     es: {
       siteTitle: 'zach.finance - las mejores herramientas financieras gratuitas del universo',
@@ -50,7 +50,7 @@ export default defineI18nConfig(() => ({
 
       indexWelcome: 'Bienvenido a zach.finance',
       indexVolatilityTools: 'Herramientas de Volatilidad',
-      indexDividendTools: 'Herramientas de Dividendos'
+      indexFinancials: 'Datos Financieros'
     }
   }
 }))
