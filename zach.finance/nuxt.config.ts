@@ -9,7 +9,8 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/apollo',
     '@nuxtjs/i18n',
-    'nuxt-gtag'
+    'nuxt-gtag',
+    '@sidebase/nuxt-session'
   ],
 
   apollo: {
@@ -63,9 +64,9 @@ export default defineNuxtConfig({
         en: '/volatility',
         es: '/volatilidad'
       },
-      financials: {
-        en: '/financials',
-        es: '/financieros'
+      assets: {
+        en: '/assets',
+        es: '/assetos'
       }
     }
   }

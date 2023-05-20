@@ -1,5 +1,5 @@
 query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {
-  getAsset(tickers: $tickers) {
+  getAssets(tickers: $tickers) {
     ticker
     name
     trailingPERatio
@@ -16,10 +16,6 @@ query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {
     historicalPrices(from: $fromDate, to: $toDate) {
       date
       close
-    }
-    historicalEarnings {
-      epsActual
-      quarter
     }
   }
 }

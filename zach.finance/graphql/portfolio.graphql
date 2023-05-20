@@ -1,0 +1,22 @@
+query GetPortfolios {
+  getPortfolios {
+    name
+    uid
+    positions {
+      ticker
+      purchases {
+        timestamp
+        shareAmount
+        pricePerShare
+      }
+    }
+  }
+}
+
+mutation UpdatePortfolio($updatePortfolioInput: UpdatePortfolioInput!) {
+  updatePortfolio(updatePortfolioInput: $updatePortfolioInput)
+}
+
+mutation CreatePortfolio($createPortfolioInput: CreatePortfolioInput!) {
+  createPortfolio(createPortfolioInput: $createPortfolioInput)
+}

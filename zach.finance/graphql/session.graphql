@@ -1,0 +1,11 @@
+query GetSession {
+  getSession {
+    startDate
+    endDate
+  }
+}
+
+mutation SetSession($ownerUid: String!, $input: SessionInput!) {
+  setSession(ownerUid: $ownerUid, session: $input)
+}
+

@@ -14,7 +14,7 @@ Chart.register(LineController, LinearScale, PointElement, TimeScale)
 
 const props = defineProps({
   assets: {
-    type: Array as PropType<GetAssetsQuery['getAsset']>,
+    type: Array as PropType<GetAssetsQuery['getAssets']>,
     required: true,
     default: () => []
   },
@@ -30,7 +30,7 @@ const props = defineProps({
 let chartInstance: Chart<'line', { x: string, y: number }[], Date> | null = null
 const canvas = ref<null | HTMLCanvasElement>(null)
 
-const draw = (assets: GetAssetsQuery['getAsset']) => {
+const draw = (assets: GetAssetsQuery['getAssets']) => {
   const datasets = assets.map((asset, index) => {
     const vals = asset.historicalPrices.map(h => ({
       x: h.date,

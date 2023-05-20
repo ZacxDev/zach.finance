@@ -22,6 +22,7 @@
             </div>
           </div>
         </div>
+        <PortfolioForm v-if="route.path !== '/'" />
         <slot />
       </Body>
 

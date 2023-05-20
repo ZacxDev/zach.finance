@@ -28,6 +28,7 @@
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/i18n": "^8.0.0-beta.11",
     "@nuxtjs/tailwindcss": "^6.6.7",
+    "@sidebase/nuxt-session": "^0.2.7",
     "@types/d3": "^7.4.0",
     "@types/node": "^18",
     "@vue/apollo-composable": "^4.0.0-beta.4",

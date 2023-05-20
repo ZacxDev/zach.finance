@@ -21,7 +21,7 @@
           </div>
         </nuxt-link>
         <nuxt-link
-          to="/assets/AAPL,TSLA,SCHD"
+          :to="localePath({ name: 'assets' })"
           class="card w-1/6 cursor-pointer transition-shadow hover:shadow-green-700 hover:shadow-md"
         >
           <div class="card-body">

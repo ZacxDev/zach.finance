@@ -9,10 +9,10 @@
     <div class="card w-11/12 max-w-none">
       <div class="card-body">
         <div>
-          <PriceChart :assets="result.getAsset" :start="fromDate * 1000" :end="toDate * 1000" />
+          <PriceChart :assets="result.getAssets" :start="fromDate * 1000" :end="toDate * 1000" />
         </div>
         <div class="flex flex-wrap gap-6">
-          <div v-for="asset in result.getAsset" :key="asset.ticker" class="card shadow-gray-900 shadow-lg max-w-none w-1/4 min-w-1/6 flex-shrink basis-0">
+          <div v-for="asset in result.getAssets" :key="asset.ticker" class="card shadow-gray-900 shadow-lg max-w-none w-1/4 min-w-1/6 flex-shrink basis-0">
             <div class="card-body">
               <h3 class="text-4xl font-bold">
                 {{ asset.ticker }}
@@ -62,7 +62,7 @@
 import { useQuery } from '@vue/apollo-composable'
 import { GetAssetsDocument, GetAssetsQuery } from '~/gql/graphql'
 
-type asset = GetAssetsQuery['getAsset'][number]
+type asset = GetAssetsQuery['getAssets'][number]
 
 export default {
   props: {
@@ -95,7 +95,7 @@ export default {
     }
 
     function formatPercentage(number: number): string {
-      return (number * 100).toFixed(2) + '%'
+      return number.toFixed(2) + '%'
     }
 
     function formatDate(dateUnix: number): string {
