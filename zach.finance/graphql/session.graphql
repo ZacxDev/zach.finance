@@ -5,7 +5,7 @@ query GetSession {
   }
 }
 
-mutation SetSession($ownerUid: String!, $input: SessionInput!) {
-  setSession(ownerUid: $ownerUid, session: $input)
+mutation SetSession($input: SessionInput!) {
+  setSession(session: $input)
 }
 

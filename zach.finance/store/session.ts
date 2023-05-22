@@ -26,8 +26,7 @@ export function useSession() {
       input: {
         startDate,
         endDate
-      },
-      ownerUid: 'test-owner-uid'
+      }
     })
   }
 

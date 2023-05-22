@@ -1,0 +1,7 @@
+mutation Signin($idToken: String!) {
+  signin(idToken: $idToken)
+}
+
+mutation Signout {
+  signout
+}
