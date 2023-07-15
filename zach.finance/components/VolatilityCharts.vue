@@ -14,13 +14,16 @@
               <div class="flex flex-col justify-between items-center gap-2">
                 <label for="interval">{{ $t('interval') }}:</label>
                 <div class="btn-group btn-group-scrollable shadow-lg shadow-gray-800">
-                  <button type="button" :class="{ btn: true, ['btn-active']: interval === '1d' }" @click="interval = '1d'">
+                  <button type="button" :class="{ btn: true, ['btn-active']: interval === '1d' }"
+                    @click="interval = 'd'">
                     {{ $t('daily') }}
                   </button>
-                  <button type="button" :class="{ btn: true, ['btn-active']: interval === '1wk' }" @click="interval = '1wk'">
+                  <button type="button" :class="{ btn: true, ['btn-active']: interval === '1wk' }"
+                    @click="interval = 'w'">
                     {{ $t('weekly') }}
                   </button>
-                  <button type="button" :class="{ btn: true, ['btn-active']: interval === '1mo' }" @click="interval = '1mo'">
+                  <button type="button" :class="{ btn: true, ['btn-active']: interval === '1mo' }"
+                    @click="interval = 'm'">
                     {{ $t('monthly') }}
                   </button>
                 </div>
@@ -48,11 +51,15 @@ import { ref } from 'vue'
 import { registerables, Chart } from 'chart.js'
 // eslint-disable-nextline
 import 'chartjs-adapter-date-fns'
+import { format, fromUnixTime, subMonths } from 'date-fns'
 import { GetSessionQuery, GetVolatilityDocument, Portfolio, Volatility } from '~/gql/graphql'
 import { useSession } from '~/store/session'
 import { usePortfolios } from '~/store/portfolio'
 
 Chart.register(...registerables)
+
+const defaultStartDate = subMonths(new Date(), 1)
+const defaultEndDate = new Date()
 
 export default {
   setup() {
@@ -63,8 +70,8 @@ export default {
     const start = sessionResult.value?.getSession.startDate
     const end = sessionResult.value?.getSession.endDate
 
-    const startFormatted = start ? new Date(start * 1000).toString() : undefined
-    const endFormatted = end ? new Date(end * 1000).toString() : undefined
+    const startFormatted = start ? new Date(start * 1000).toString() : defaultStartDate.toString()
+    const endFormatted = end ? new Date(end * 1000).toString() : defaultEndDate.toString()
 
     const interval = ref('1d')
 
@@ -73,13 +80,14 @@ export default {
 
     const initialize = (newPortfolio: Portfolio, newSession: GetSessionQuery) => {
       const tickers = newPortfolio.positions.map(p => p.ticker)
-      const start = newSession.getSession.startDate
-      const end = newSession.getSession.endDate
+
+      const start = fromUnixTime(newSession.getSession.startDate) || format(defaultStartDate, 'yyyy-MM-dd')
+      const end = fromUnixTime(newSession.getSession.endDate) || format(defaultEndDate, 'yyyy-MM-dd')
 
       load(GetVolatilityDocument, {
         tickers,
-        start: new Date(start).getTime(),
-        end: new Date(end).getTime(),
+        start: Math.floor(new Date(start).getTime() / 1000),
+        end: Math.floor(new Date(end).getTime() / 1000),
         interval: interval.value
       })
     }
