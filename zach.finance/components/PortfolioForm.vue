@@ -109,9 +109,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { subMonths, format } from 'date-fns'
 import { Portfolio } from '~/gql/graphql'
 import { useCreatePortfolio, usePortfolios, useUpdatePortfolio } from '~/store/portfolio'
 import { Session, useSession } from '~/store/session'
+
+const defaultStartDate = subMonths(new Date(), 1)
+const defaultEndDate = new Date()
 
 export default defineComponent({
   setup() {
@@ -144,8 +148,8 @@ export default defineComponent({
     const { getSession, setSession } = useSession()
     const { onResult, result } = getSession()
     const session = ref<Session | null>(result.value?.getSession || null)
-    const defaultStartDateTimeString = session.value?.startDate ? new Date(session.value.startDate * 1000).toISOString().substring(0, 10) : undefined
-    const defaultEndDateTimeString = session.value?.endDate ? new Date(session.value.endDate * 1000).toISOString().substring(0, 10) : undefined
+    const defaultStartDateTimeString = session.value?.startDate ? new Date(session.value.startDate * 1000).toISOString().substring(0, 10) : format(defaultStartDate, 'yyyy-MM-dd')
+    const defaultEndDateTimeString = session.value?.endDate ? new Date(session.value.endDate * 1000).toISOString().substring(0, 10) : format(defaultEndDate, 'yyyy-MM-dd')
 
     onResult((s) => {
       const ss = s.data.getSession
@@ -214,21 +218,27 @@ export default defineComponent({
     }
 
     const updateStartDate = (dateString: string) => {
-      const startDate = new Date(dateString).getTime() / 1000
+      const startDate = new Date(dateString)
+      const startDateMilis = startDate.getTime() / 1000
       if (session.value) {
-        setSession(startDate, session.value.endDate)
+        setSession(session.value.uid, startDateMilis, session.value.endDate)
       } else {
-        setSession(startDate, Math.round(new Date().getTime() / 1000))
+        setSession(startDateMilis, Math.round(new Date().getTime() / 1000))
       }
+
+      startDateString.value = startDate.toISOString().substring(0, 10)
     }
 
     const updateEndDate = (dateString: string) => {
-      const endDate = new Date(dateString).getTime() / 1000
+      const endDate = new Date(dateString)
+      const endDateMilis = endDate.getTime() / 1000
       if (session.value) {
-        setSession(session.value.startDate, endDate)
+        setSession(session.value.startDate, endDateMilis)
       } else {
-        setSession(Math.round(new Date().getTime() / 1000), endDate)
+        setSession(Math.round(new Date().getTime() / 1000), endDateMilis)
       }
+
+      endDateString.value = endDate.toISOString().substring(0, 10)
     }
 
     return {
