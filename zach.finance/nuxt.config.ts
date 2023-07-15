@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     clients: {
       default: {
         httpEndpoint: isProd ? 'https://api.finsune.com/query' : 'http://localhost:59001/query',
+        tokenName: 'session',
         httpLinkOptions: {
           headers: {
             origin: 'http://localhost:3000'
