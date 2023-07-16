@@ -63,6 +63,10 @@ export default defineNuxtConfig({
     },
     customRoutes: 'config',
     pages: {
+      index: {
+        en: '/',
+        es: '/'
+      },
       volatility: {
         en: '/volatility',
         es: '/volatilidad'

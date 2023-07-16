@@ -16,7 +16,10 @@
         <div v-if="route.path !== '/'" class="flex justify-center">
           <div class="navbar w-11/12 card max-w-none" style="background-color:#232323;">
             <div class="navbar-start flex items-center justify-between">
-              <nuxt-link class="navbar-item" to="/">
+              <nuxt-link
+                class="navbar-item"
+                :to="localePath({ name: 'index' })"
+              >
                 zach.finance
               </nuxt-link>
               <span v-if="user" class="navbar-item" @click="logout()">
@@ -64,6 +67,7 @@ const desc = computed(() => t('siteDescription'))
 const route = useRoute()
 const user = useCurrentUser()
 const router = useRouter()
+const localePath = useLocalePath()
 
 useHead({
   meta: [
