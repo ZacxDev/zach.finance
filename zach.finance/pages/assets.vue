@@ -15,7 +15,7 @@ const currentTime = unixTimeRounded
 const oneMonthAgo = unixTimeRounded - 2592000
 
 const p = portfolios.value?.getPortfolios[0]
-const tickers = p ? p.positions.map(p => p.ticker) : ['TSLA']
+const tickers = p?.positions.length ? p.positions.map(p => p.ticker) : ['TSLA']
 const fromDate = session.value?.startDate || oneMonthAgo
 const toDate = session.value?.endDate || currentTime
 </script>
