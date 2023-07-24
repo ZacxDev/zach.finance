@@ -24,10 +24,10 @@
         Highlights:
       </h3>
       <p class="">
-        Market Capitalization: {{ stockData.Highlights.MarketCapitalization }}
+        Market Cap. (MM): ${{ (stockData.Highlights.MarketCapitalization / 100000000).toFixed(3) }}
       </p>
       <p class="">
-        Dividend Yield: {{ stockData.Highlights.DividendYield * 100 }}%
+        Dividend Yield: {{ (stockData.Highlights.DividendYield * 100).toFixed(3) }}%
       </p>
       <!-- ...more fields can be added here -->
     </div>
