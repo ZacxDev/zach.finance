@@ -1,0 +1,21 @@
+query getStock($ticker: String!) {
+  getStock(ticker: $ticker) {
+    General {
+      Code
+      Type
+      Name
+      Exchange
+      CurrencyCode
+    }
+    Highlights {
+      MarketCapitalization
+      Price
+      DividendYield
+    }
+    Valuation {
+      ForwardPE
+      TrailingPE
+    }
+  }
+}
+

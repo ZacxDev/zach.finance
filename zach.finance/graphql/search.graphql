@@ -1,0 +1,9 @@
+query GetStocks($text: String!) {
+  search(text: $text) {
+    Code
+    Name
+    PreviousClose
+    Type
+  }
+}
+

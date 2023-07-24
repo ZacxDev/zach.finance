@@ -1,0 +1,28 @@
+query getETF($ticker: String!) {
+  getETF(ticker: $ticker) {
+    ETFGeneral {
+      name
+      type
+      exchange
+      currencyCode
+    }
+    ETFData {
+      netExpenseRatio
+      yield
+      top10Holdings {
+        holding {
+          name
+          code
+          assetsPercent
+        }
+      }
+      holdings {
+        holding {
+          name
+          code
+          assetsPercent
+        }
+      }
+    }
+  }
+}

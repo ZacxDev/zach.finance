@@ -6,6 +6,11 @@
           {{ title }}
         </h1>
       </header>
+      <div class="flex justify-center mb-4">
+        <div class="w-1/4">
+          <AssetSearch />
+        </div>
+      </div>
       <div class="flex flex-wrap justify-center gap-4">
         <nuxt-link
           :to="localePath({ name: 'volatility' })"

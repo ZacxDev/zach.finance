@@ -1,0 +1,4 @@
+<template>
+  <StockData />
+</template>
+
