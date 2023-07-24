@@ -27,10 +27,7 @@
         Market Capitalization: {{ stockData.Highlights.MarketCapitalization }}
       </p>
       <p class="">
-        Price: {{ stockData.Highlights.Price }}
-      </p>
-      <p class="">
-        Dividend Yield: {{ stockData.Highlights.DividendYield }}
+        Dividend Yield: {{ stockData.Highlights.DividendYield * 100 }}%
       </p>
       <!-- ...more fields can be added here -->
     </div>

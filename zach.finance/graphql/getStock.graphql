@@ -9,7 +9,6 @@ query getStock($ticker: String!) {
     }
     Highlights {
       MarketCapitalization
-      Price
       DividendYield
     }
     Valuation {
