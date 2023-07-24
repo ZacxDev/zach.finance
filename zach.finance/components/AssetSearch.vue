@@ -25,7 +25,7 @@
         @click="navigate(stock.Code, stock.Type)"
       >
         <div class="flex justify-between">
-          <span class="font-semibold">{{ stock.Code }} - {{ stock.Name }} {{ stock.Type }}</span>
+          <span class="font-semibold">{{ stock.Code }} - {{ stock.Name }}}</span>
           <span class="text-gray-500">Previous Close: {{ stock.PreviousClose }}</span>
         </div>
       </li>
