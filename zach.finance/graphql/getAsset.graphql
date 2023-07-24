@@ -1,4 +1,4 @@
-query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {
+query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!, $period: String!) {
   getAssets(tickers: $tickers) {
     ticker
     name
@@ -13,7 +13,7 @@ query GetAssets($tickers: [String!]!, $fromDate: Int!, $toDate: Int!) {
     currentPrice
     dividendYield
     lastDividendDate
-    historicalPrices(from: $fromDate, to: $toDate) {
+    historicalPrices(from: $fromDate, to: $toDate, period: $period) {
       date
       close
     }
