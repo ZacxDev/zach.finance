@@ -25,7 +25,7 @@
         @click="navigate(stock.Code, stock.Type)"
       >
         <div class="flex justify-between">
-          <span class="font-semibold">{{ stock.Code }} - {{ stock.Name }}</span>
+          <span class="font-semibold">{{ stock.Code }} - {{ stock.Name }} {{ stock.Type }}</span>
           <span class="text-gray-500">Previous Close: {{ stock.PreviousClose }}</span>
         </div>
       </li>
@@ -67,8 +67,9 @@ const arrowUp = () => {
 }
 
 const enter = () => {
-  if (stocks.value[selectedIndex.value]) {
-    navigate(stocks.value[selectedIndex.value].Code)
+  const s = stocks.value[selectedIndex.value]
+  if (s) {
+    navigate(s.Code, s.Type)
   }
 }
 
@@ -90,7 +91,7 @@ const navigate = (ticker, type) => {
 const onBlur = () => {
   setTimeout(() => {
     isFocused.value = false
-  }, 100)
+  }, 200)
 }
 
 const onFocus = () => {
