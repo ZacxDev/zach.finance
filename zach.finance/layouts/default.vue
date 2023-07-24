@@ -36,6 +36,15 @@
           </div>
         </div>
 
+        <div v-if="route.path !== '/'" class="flex flex-col items-center justify-center mb-4">
+          <span class="text-xl">
+            Search Stocks, ETFs, Bonds, and, Crypto
+          </span>
+          <div class="w-1/4">
+            <AssetSearch />
+          </div>
+        </div>
+
         <slot />
       </Body>
 
