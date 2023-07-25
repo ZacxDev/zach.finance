@@ -65,7 +65,7 @@ export default defineNuxtConfig({
     pages: {
       index: {
         en: '/',
-        es: '/es'
+        es: '/'
       },
       volatility: {
         en: '/volatility',

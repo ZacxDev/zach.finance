@@ -36,7 +36,7 @@
           </div>
         </div>
 
-        <div v-if="route.path !== '/'" class="flex flex-col items-center justify-center mb-4">
+        <div v-if="route.path !== '/' && route.path !== '/es'" class="flex flex-col items-center justify-center mb-4">
           <span class="text-xl">
             Search Stocks, ETFs, Bonds, and, Crypto
           </span>
