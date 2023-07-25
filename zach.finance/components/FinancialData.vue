@@ -83,7 +83,8 @@ export default {
     const { result, loading, error } = useQuery(GetAssetsDocument, {
       tickers: props.tickers,
       fromDate: props.fromDate,
-      toDate: props.toDate
+      toDate: props.toDate,
+      period: 'd'
     })
 
     function formatNumber(number: number): string {
