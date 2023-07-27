@@ -14,7 +14,7 @@
         </span>
       </div>
       <TimePeriodButton @change="updateFromTimestamp" />
-      <PriceChart :assets="[assetData]" :start="fromTimestamp" :end="1690225741193" />
+      <PriceChart :assets="[assetData]" :start="fromTimestamp * 1000" :end="toTimestamp * 1000" />
     </div>
     <div v-if="stockData" class="flex flex-col items-center space-y-8">
       <div class="card shadow rounded w-11/12 max-w-none p-4">
@@ -77,7 +77,8 @@ import { useRoute } from 'vue-router'
 import { format } from 'date-fns'
 import { GetStockDocument, GetAssetsDocument } from '~/gql/graphql'
 
-const ytd = Math.floor(new Date((new Date()).getFullYear(), 0, 1).getTime())
+const ytd = Math.floor(new Date((new Date()).getFullYear(), 0, 1).getTime() / 1000)
+const now = Math.floor(new Date().getTime() / 1000)
 
 const route = useRoute()
 const stockData = ref(null)
@@ -85,6 +86,7 @@ const assetData = ref(null)
 const changeInPriceFormatted = ref(null)
 const changeInPricePercentFormatted = ref(null)
 const fromTimestamp = ref(ytd)
+const toTimestamp = ref(now)
 const timeRangeLabel = ref('YTD')
 const period = ref('w')
 
@@ -105,7 +107,6 @@ onGetAssetsResult((result) => {
     if (lastAssetPrice.date === currentDate) {
       lastAssetPrice = sortedPrices[sortedPrices.length - 2]
     }
-    console.log(lastAssetPrice)
 
     const changeInPrice = (asset.currentPrice - lastAssetPrice.close).toFixed(3)
     if (changeInPrice > 0) {
@@ -131,7 +132,7 @@ function refetchPrices(fromDate) {
   loadGetAssets(GetAssetsDocument, {
     tickers: [ticker],
     fromDate,
-    toDate: 1690225741193,
+    toDate: toTimestamp,
     period: period.value
   })
 }

@@ -52,7 +52,7 @@ function selectPeriod(period) {
 }
 
 function emitChange(prettyLabel, labelValue, date) {
-  const unixTime = getUnixTime(date)
+  const unixTime = getUnixTime(date) / 1000
   props.onChange(prettyLabel, labelValue, unixTime * 1000)
 }
 </script>

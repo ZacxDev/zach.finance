@@ -54,31 +54,6 @@ const draw = (assets: GetAssetsQuery['getAssets']) => {
     chartInstance.destroy()
   }
 
-  /*
-  const start = asset.historicalPrices.reduce(
-    (acc, curr) => {
-      const d = new Date(curr.date)
-      if (d < acc) {
-        return d
-      }
-      return acc
-    }, new Date(asset.historicalPrices[0].date)
-  )
-
-  const lastPrice = asset.historicalPrices.reduce(
-    (acc, curr) => {
-      const a = new Date(acc.date)
-      const d = new Date(curr.date)
-      if (d > a) {
-        return curr
-      }
-      return acc
-    }, asset.historicalPrices[0]
-  )
-  const end = new Date(lastPrice.date)
-  end.setDate(end.getDate() + 1)
-  */
-
   const cfg: ChartConfiguration<'line', { x: string, y: number }[], Date> = {
     type: 'line',
     data: {
